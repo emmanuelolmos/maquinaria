@@ -24,7 +24,7 @@ $(document).ready(function () {
         };
         
         $.ajax({ 
-            url: 'http://maquinaria.test/app/Controllers/SessionController.php', 
+            url: '../Controllers/SessionController.php', 
             type: 'POST', 
             data: formData, 
             success: function (data){

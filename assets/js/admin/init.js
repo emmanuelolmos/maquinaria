@@ -5,7 +5,7 @@ function loadData(){
     };
     
     $.ajax({ 
-        url: 'http://maquinaria.test/app/Controllers/AdminController.php', 
+        url: '../../Controllers/AdminController.php', 
         type: 'POST', 
         data: petition, 
         success: function (data){
@@ -102,7 +102,7 @@ function removeUser(id){
             };
             
             $.ajax({ 
-                url: 'http://maquinaria.test/app/Controllers/AdminController.php', 
+                url: '../../Controllers/AdminController.php', 
                 type: 'POST', 
                 data: petition, 
                 success: function (data){
