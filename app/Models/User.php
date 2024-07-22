@@ -77,6 +77,52 @@ class User{
         }
     }
 
+    function addUser($name, $phone, $password, $company, $role, $status){
+
+        //Antes de generar el registro se comprueba que no haya un registro con el mismo nombre o número teléfonico
+        $query = 'SELECT * FROM usuarios WHERE nombre_usuario = :nameUser OR telefono = :phone';
+        
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':nameUser', $name);
+        $statement->bindParam(':phone', $phone);
+
+        if($statement->execute()){
+
+            $users = $statement->fetchAll();
+
+            //Se comprueba que el query haya obtenido registros o no
+            if(!isset($users[0]['telefono'])){
+
+                //Se procede a crear el usuario
+                $query = 'INSERT INTO usuarios (nombre_usuario, telefono, clave, empresa, status_usuario, rol_usuario) 
+                VALUES (:nameUser, :phone, :passwordUser, :company, :statusUser, :roleUser)';
+
+                $statement = $this->connection->prepare($query);
+                $statement->bindParam(':nameUser', $name);
+                $statement->bindParam('phone', $phone);
+                $statement->bindParam('passwordUser', $password);
+                $statement->bindParam(':company', $company);
+                $statement->bindParam(':statusUser', $status);
+                $statement->bindParam(':roleUser', $role);
+
+                if($statement->execute()){
+
+                    return '';
+
+                }else{
+                    return 'Error';
+                }
+
+            }else{
+                return 'El nombre o teléfono ingresado ya se encuentra registrado';
+            }
+
+        }else{
+            return 'Error';
+        }
+
+    }
+
     function removeUser($id){
 
         $query = 'DELETE FROM usuarios WHERE ID_usuario = :id';

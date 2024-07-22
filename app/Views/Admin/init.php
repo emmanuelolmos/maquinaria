@@ -28,10 +28,8 @@
 <body>
 
     <?php
-        include '../Components/Admin/navbar.php'; //'./app/Views/Components/Admin/navbar.php' 
+        include '../Components/Admin/navbar.php';
     ?>
-
-    <!--<h1>Bienvenido</h1>-->
 
     <div class="card shadow" style="margin-left: 40px; margin-right: 40px; margin-top:40px;">
         <div class="d-flex justify-content-between p-2 bg-primary text-white" style="margin-left: 20px; margin-right: 20px; margin-top:40px">
@@ -42,7 +40,7 @@
             </h1>
         </div>
         <div>
-            <button class="btn btn-secondary" onclick="addUser()" style="margin-right: 30px;">
+            <button class="btn btn-secondary" onclick="loadCompanies()" data-bs-toggle="modal" data-bs-target="#addUserModal" style="margin-right: 30px;">
                 <i class="bi bi-person-plus-fill"></i> Agregar
             </button>
         </div>
@@ -70,7 +68,13 @@
         <br>
       
     </div>
+    
+    <!-- Modales -->
+    <?php
+        include 'Modals/addUser.php';
+    ?>
 
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="../../../assets/js/bootstrap.bundle.js"></script>
     <script src="../../../assets/js/admin/init.js"></script>

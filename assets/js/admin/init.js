@@ -71,6 +71,66 @@ function loadData(){
     }); 
 }
 
+function loadCompanies(){
+
+    var petition = {
+        function: 'getCompanies'
+    };
+    
+    $.ajax({ 
+        url: '../../Controllers/AdminController.php', 
+        type: 'POST', 
+        data: petition, 
+        success: function (data){
+
+            var convertedInfo = JSON.parse(data);
+
+            if(convertedInfo['success']){
+                
+                let select = '';
+
+                //Cada empresa
+                for(let i=0; i < convertedInfo['companies'].length; i++){
+
+                    //En caso de ya haberse generado las opciones es necesario borrar las anteriores
+                    $("#itemCompanies").remove();
+                    
+                    //Cada dato del usuario
+                    select += '<option id="itemCompanies" value="' + convertedInfo['companies'][i].ID_empresa + '">' + convertedInfo['companies'][i].nombre_empresa + '</option>';
+
+                }
+
+                $("#company").append(select);
+                
+            }else{
+
+                switch(convertedInfo['error']){
+                    case 'Error':
+                        $("#companies").append(
+                            '<option id="itemCompanies" value="">No se cargó el listado de empresas</option>'
+                        );
+                        break;
+                    case 'Empty':
+                        $("#companies").append(
+                            '<option id="itemCompanies" value="">No hay empresas registradas</option>'
+                        );
+                        break;
+                    default:
+                        $("#companies").append(
+                            '<option id="itemCompanies" value="">Error desconocido</option>'
+                        );
+                        break;
+                }
+
+            }
+
+        }, 
+        error: function (jqXHR, textStatus, errorThrown) { 
+            alert('Error'); 
+        } 
+    }); 
+}
+
 function addUser(){
     //Pendiente
 }
@@ -161,5 +221,51 @@ function removeUser(id){
 function editUser(id){
     alert('Se editará: ' + id);
 }
+
+//Formularios de los modales
+
+//Nuevo usuario
+$(document).ready(function () { 
+    $('#formAddUserModal').submit(function (e) { 
+        e.preventDefault(); 
+
+        //Para el caso que el usuario haya enviado el form con datos erróneos
+        $("#errorMessageContent").remove();
+         
+        var formData = {
+            name: $("#name").val(),
+            phone: $("#phone").val(),
+            password: $("#password").val(),
+            company: $("#company").val(),
+            role: $("#role").val(),
+            status: $("#status").val(),
+            function: 'insertUser'
+        };
+
+        $.ajax({ 
+            url: '../../Controllers/AdminController.php', 
+            type: 'POST', 
+            data: formData, 
+            success: function (data){
+
+                var convertedInfo = JSON.parse(data);
+
+                if(convertedInfo['success']){
+
+                    location.reload();
+                    
+                }else{
+                    $("#errorMessage").append(
+                        '<h1 id="errorMessageContent" class="text-danger fw-bold fs-6 mb-3">' + convertedInfo['error'] + '</h1>'
+                    );
+                }
+
+            }, 
+            error: function (jqXHR, textStatus, errorThrown) { 
+                alert('Error'); 
+            } 
+        });
+    }); 
+}); 
 
 loadData();
