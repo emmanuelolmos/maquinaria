@@ -72,6 +72,7 @@
     <!-- Modales -->
     <?php
         include 'Modals/addUser.php';
+        include 'Modals/editUser.php';
     ?>
 
     <!-- Scripts -->

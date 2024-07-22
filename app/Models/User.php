@@ -77,6 +77,24 @@ class User{
         }
     }
 
+    function getUser($id){
+
+        //Consulta para obtener el usuario
+        $query = 'SELECT * FROM usuarios WHERE ID_usuario = :id';
+
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':id', $id);
+
+        if($statement->execute()){
+
+            $userFound = $statement->fetchAll();
+
+            return $userFound;//[0]['telefono'];
+        }else{
+            return 'Error';
+        }
+    }
+
     function addUser($name, $phone, $password, $company, $role, $status){
 
         //Antes de generar el registro se comprueba que no haya un registro con el mismo nombre o número teléfonico
@@ -117,6 +135,56 @@ class User{
                 return 'El nombre o teléfono ingresado ya se encuentra registrado';
             }
 
+        }else{
+            return 'Error';
+        }
+
+    }
+
+    function updateUser($id, $name, $phone, $password, $company, $role, $status){
+
+        //Se verifica que el nombre o telefono no se encuentre ya registrado
+        $query = 'SELECT * FROM usuarios WHERE ID_usuario != :id AND nombre_usuario = :nameUser 
+        OR ID_usuario != :id AND telefono = :phone';
+        
+        $statement = $this->connection->prepare($query);
+
+        $statement->bindParam('id', $id);
+        $statement->bindParam('nameUser', $name);
+        $statement->bindParam('phone', $phone);
+
+        if($statement->execute()){
+            
+            $users = $statement->fetchAll();
+
+            if(!isset($users[0]['telefono'])){
+
+                //Ya se verificó
+
+                //Se realiza el query para actualizar usuario
+                $query = 'UPDATE usuarios SET nombre_usuario = :nameUser, telefono = :phone, 
+                clave = :passwordUser, empresa = :company, status_usuario = :statusUser, 
+                rol_usuario = :roleUser WHERE ID_usuario = :id';
+
+                $statement = $this->connection->prepare($query);
+
+                $statement->bindParam('nameUser', $name);
+                $statement->bindParam('phone', $phone);
+                $statement->bindParam('passwordUser', $password);
+                $statement->bindParam('company', $company);
+                $statement->bindParam('statusUser', $status);
+                $statement->bindParam('roleUser', $role);
+                $statement->bindParam('id', $id);
+
+                if($statement->execute()){
+                    return '';
+                }else{
+                    return 'Error';
+                }
+                
+            }else{
+                return 'El nombre o teléfono ingresado ya se encuentra registrado';
+            }
         }else{
             return 'Error';
         }

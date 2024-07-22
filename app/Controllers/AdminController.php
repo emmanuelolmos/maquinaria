@@ -20,12 +20,13 @@ if(isset($_REQUEST['function'])){
 $error = '';
 $data = [];
 
+/*
 //Variables adicionales
 $idUser = '';
 
 if(isset($_POST['idUser'])){
     $idUser = $_POST['idUser'];
-}
+}*/
 
 switch($function){
     case 'getUsers':
@@ -100,8 +101,56 @@ switch($function){
 
         break;
 
-    case 'editUser':
-        echo $idUser;
+    case 'updateUser':
+
+        //Se guardan los datos enviados
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $name = isset($_POST['name']) ? $_POST['name'] : '';
+        $phone = isset($_POST['phone']) ? $_POST['phone'] : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        $company = isset($_POST['company']) ? $_POST['company'] : '';
+        $role = isset($_POST['role']) ? $_POST['role'] : '';
+        $status = isset($_POST['status']) ? $_POST['status'] : '';
+
+        //Se comprueba que los datos se hayan ingresado correctamente
+        if(empty($name) || empty($phone) || empty($password) || empty($company) || empty($role) || empty($status)){
+
+            $error = 'Es necesario ingresar los datos completos';
+
+        }else{
+            
+            if(!is_numeric($phone) || strlen($phone)!=10){
+
+                $error = 'El número ingresado no es valido';
+
+            }else{
+
+                //Lista de roles
+                switch($role){
+                    case '1':
+                        $role = 'SUPERADMIN';
+                        break;
+                }
+
+                //Se obtiene el modelo
+                $user = new User();
+
+                //Los campos son correctos, se manda al método updateUser del modelo User
+                $error = $user->updateUser($id , $name, $phone, $password, $company, $role, $status);
+
+            }
+        }
+
+        //Si hay un error se manda por la variable data
+        if(empty($error)){
+            $data['success'] = true;
+        }else{
+            $data['success'] = false;
+            $data['error'] = $error;
+        }
+
+        echo json_encode($data);
+        
         break;
 
     case 'removeUser':
@@ -146,6 +195,36 @@ switch($function){
             $data['companies'] = $companies;
         }
         
+        echo json_encode($data);
+
+        break;
+    
+    case 'getDataUser':
+
+        $id = $_POST['id'];
+
+        $user = new User();
+
+        $userFound = $user->getUser($id);
+
+        //Se verifica que la consulta se haya realizado correctamente
+        if($userFound != 'Error'){
+
+            $data['success'] = true;
+
+            //Se manda la información del usuario
+            $data['name'] = $userFound[0]['nombre_usuario'];
+            $data['phone'] = $userFound[0]['telefono'];
+            $data['password'] = $userFound[0]['clave'];
+            $data['company'] = $userFound[0]['empresa'];
+            $data['status'] = $userFound[0]['status_usuario'];
+            $data['role'] = $userFound[0]['rol_usuario'];
+
+        }else{
+            $data['success'] = false;
+            $data['error'] = $userFound;
+        }
+
         echo json_encode($data);
 
         break;
