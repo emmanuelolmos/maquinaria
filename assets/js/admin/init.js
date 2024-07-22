@@ -5,7 +5,7 @@ function loadData(){
     };
     
     $.ajax({ 
-        url: '../../Controllers/AdminController.php', 
+        url: '../../Controllers/Admin/UserController.php', 
         type: 'POST', 
         data: petition, 
         success: function (data){
@@ -78,7 +78,7 @@ function loadCompanies(){
     };
     
     $.ajax({ 
-        url: '../../Controllers/AdminController.php', 
+        url: '../../Controllers/Admin/UserController.php', 
         type: 'POST', 
         data: petition, 
         success: function (data){
@@ -138,7 +138,7 @@ function loadCompaniesEditUser(idCompanyUser){
     };
     
     $.ajax({ 
-        url: '../../Controllers/AdminController.php', 
+        url: '../../Controllers/Admin/UserController.php', 
         type: 'POST', 
         data: petition, 
         success: function (data){
@@ -205,7 +205,7 @@ function loadDataUser(id){
     };
 
     $.ajax({ 
-        url: '../../Controllers/AdminController.php', 
+        url: '../../Controllers/Admin/UserController.php', 
         type: 'POST', 
         data: petition, 
         success: function (data){
@@ -281,11 +281,11 @@ function removeUser(id){
             //Se confirmó la eliminación
             var petition = {
                 function: 'removeUser',
-                idUser: id
+                id: id
             };
             
             $.ajax({ 
-                url: '../../Controllers/AdminController.php', 
+                url: '../../Controllers/Admin/UserController.php', 
                 type: 'POST', 
                 data: petition, 
                 success: function (data){
@@ -362,7 +362,7 @@ $(document).ready(function () {
         };
 
         $.ajax({ 
-            url: '../../Controllers/AdminController.php', 
+            url: '../../Controllers/Admin/UserController.php', 
             type: 'POST', 
             data: formData, 
             success: function (data){
@@ -407,7 +407,7 @@ $(document).ready(function () {
         };
 
         $.ajax({ 
-            url: '../../Controllers/AdminController.php', 
+            url: '../../Controllers/Admin/UserController.php', 
             type: 'POST', 
             data: formData, 
             success: function (data){

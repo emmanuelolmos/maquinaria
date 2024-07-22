@@ -2,8 +2,8 @@
 
 session_start();
 
-require "../Models/User.php";
-require "../Models/Company.php";
+require "../../Models/User.php";
+require "../../Models/Company.php";
 
 //Se obtiene la función a realizar
 $function = '';
@@ -155,8 +155,10 @@ switch($function){
 
     case 'removeUser':
 
+        $id = $_POST['id'];
+
         //Comprobación de que el ID no sea el mismo de la sesión
-        if($_SESSION['ID_usuario'] == $idUser){
+        if($_SESSION['ID_usuario'] == $id){
             $data['success'] = false;
             $data['error'] = 'ownAccount';
         }else{
@@ -165,7 +167,7 @@ switch($function){
             $user = new User();
 
             //Eliminación de usuario
-            if($user->removeUser($idUser)){
+            if($user->removeUser($id)){
                 $data['success'] = true;
             }else{
                 $data['success'] = false;

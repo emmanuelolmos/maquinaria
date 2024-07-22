@@ -1,6 +1,6 @@
 <?php 
 
-require_once "../../config/Connection.php";
+require_once "../../../config/Connection.php";
 
 class User{
     

@@ -31,7 +31,7 @@
                     <i class="bi bi-person-circle"></i> <?php echo $_SESSION['nombre'] ?>
                 </a>
                 <div class="dropdown-menu " style="width: 0px;">
-                    <a class="dropdown-item text-center" href="<?php echo $env["APP_URL"] . '/app/Controllers/SessionController.php?function=exitSession'; ?>">
+                    <a class="dropdown-item text-center" href="<?php echo $env["APP_URL"] . '/app/Controllers/More/SessionController.php?function=exitSession'; ?>">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </a>
                 </div>

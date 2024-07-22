@@ -24,7 +24,7 @@ $(document).ready(function () {
         };
         
         $.ajax({ 
-            url: '../Controllers/SessionController.php', 
+            url: '../Controllers/More/SessionController.php', 
             type: 'POST', 
             data: formData, 
             success: function (data){

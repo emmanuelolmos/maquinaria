@@ -2,7 +2,7 @@
 
 session_start();
 
-require "../Models/User.php";
+require "../../Models/User.php";
 
 //Se obtiene el modelo
 $user = new User();
@@ -81,7 +81,7 @@ switch($function){
 
         //Finalmente, destruir la sesión
         session_destroy();
-        header("location:../../");
+        header("location:../../../");
 
         break;
 
