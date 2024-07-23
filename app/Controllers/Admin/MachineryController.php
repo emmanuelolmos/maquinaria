@@ -4,6 +4,7 @@ session_start();
 
 require "../../Models/User.php";
 require "../../Models/Company.php";
+require "../../Models/Machinery.php";
 
 //Se obtiene la función a realizar
 $function = '';
@@ -42,136 +43,61 @@ switch($function){
         
         break;
     
-    case 'insertUser':
+    case 'getMachinery':
 
-        //Se guardan los datos enviados
-        $name = isset($_POST['name']) ? $_POST['name'] : '';
-        $phone = isset($_POST['phone']) ? $_POST['phone'] : '';
-        $password = isset($_POST['password']) ? $_POST['password'] : '';
-        $company = isset($_POST['company']) ? $_POST['company'] : '';
-        $role = isset($_POST['role']) ? $_POST['role'] : '';
-        $status = isset($_POST['status']) ? $_POST['status'] : '';
+        //Se obtiene el modelo
+        $machinery = new Machinery();
 
-        //Se comprueba que los datos se hayan ingresado correctamente
-        if(empty($name) || empty($phone) || empty($password) || empty($company) || empty($role) || empty($status)){
+        //Obtención de la lista de maquinaria
+        $result = $machinery->getMachinery();
 
-            $error = 'Es necesario ingresar los datos completos';
-
+        //Condición en caso de error o no haya registros
+        if($result == 'Error' || $result == 'Empty'){
+            $data['success'] = false;
+            $data['error'] = $result;
         }else{
-            
-            if(!is_numeric($phone) || strlen($phone)!=10){
-
-                $error = 'El número ingresado no es valido';
-
-            }else{
-
-                //Lista de roles
-                switch($role){
-                    case '1':
-                        $role = 'SUPERADMIN';
-                        break;
-                }
-
-                //Se obtiene el modelo
-                $user = new User();
-
-                //Los campos son correctos, se manda al método addUser del modelo User
-                $error = $user->addUser($name, $phone, $password, $company, $role, $status);
-
-            }
-        }
-
-        //Si hay un error se manda por la variable data
-        if(empty($error)){
             $data['success'] = true;
-        }else{
-            $data['success'] = false;
-            $data['error'] = $error;
+            $data['machinery'] = $result;
         }
 
         echo json_encode($data);
 
         break;
 
-    case 'updateUser':
+    case 'findMachinery':
 
-        //Se guardan los datos enviados
-        $id = isset($_POST['id']) ? $_POST['id'] : '';
-        $name = isset($_POST['name']) ? $_POST['name'] : '';
-        $phone = isset($_POST['phone']) ? $_POST['phone'] : '';
-        $password = isset($_POST['password']) ? $_POST['password'] : '';
-        $company = isset($_POST['company']) ? $_POST['company'] : '';
-        $role = isset($_POST['role']) ? $_POST['role'] : '';
-        $status = isset($_POST['status']) ? $_POST['status'] : '';
+        //Se obtiene el modelo
+        $machinery = new Machinery();
 
-        //Se comprueba que los datos se hayan ingresado correctamente
-        if(empty($name) || empty($phone) || empty($password) || empty($company) || empty($role) || empty($status)){
+        //Se obtiene el nombre a buscar
+        $name = $_POST['name'];
 
-            $error = 'Es necesario ingresar los datos completos';
+        if($name == ''){
+
+            //Obtención de la lista de maquinaria
+            $result = $machinery->getMachinery();
 
         }else{
-            
-            if(!is_numeric($phone) || strlen($phone)!=10){
 
-                $error = 'El número ingresado no es valido';
+            //Obtención de la lista de maquinaria
+            $result = $machinery->findMachinery($name);
 
-            }else{
-
-                //Lista de roles
-                switch($role){
-                    case '1':
-                        $role = 'SUPERADMIN';
-                        break;
-                }
-
-                //Se obtiene el modelo
-                $user = new User();
-
-                //Los campos son correctos, se manda al método updateUser del modelo User
-                $error = $user->updateUser($id , $name, $phone, $password, $company, $role, $status);
-
-            }
         }
 
-        //Si hay un error se manda por la variable data
-        if(empty($error)){
+        //Condición en caso de error o no haya registros
+        if($result == 'Error' || $result == 'Empty'){
+            $data['success'] = false;
+            $data['error'] = $result;
+        }else{
             $data['success'] = true;
-        }else{
-            $data['success'] = false;
-            $data['error'] = $error;
-        }
-
-        echo json_encode($data);
-        
-        break;
-
-    case 'removeUser':
-
-        $id = $_POST['id'];
-
-        //Comprobación de que el ID no sea el mismo de la sesión
-        if($_SESSION['ID_usuario'] == $id){
-            $data['success'] = false;
-            $data['error'] = 'ownAccount';
-        }else{
-
-            //Se obtiene el modelo
-            $user = new User();
-
-            //Eliminación de usuario
-            if($user->removeUser($id)){
-                $data['success'] = true;
-            }else{
-                $data['success'] = false;
-                $data['error'] = 'unknown';
-            }
-            
+            $data['machinery'] = $result;
         }
 
         echo json_encode($data);
 
         break;
-    
+
+    /*
     case 'getCompanies':
 
         //Se obtiene el modelo
@@ -191,37 +117,7 @@ switch($function){
         
         echo json_encode($data);
 
-        break;
-    
-    case 'getDataUser':
-
-        $id = $_POST['id'];
-
-        $user = new User();
-
-        $userFound = $user->getUser($id);
-
-        //Se verifica que la consulta se haya realizado correctamente
-        if($userFound != 'Error'){
-
-            $data['success'] = true;
-
-            //Se manda la información del usuario
-            $data['name'] = $userFound[0]['nombre_usuario'];
-            $data['phone'] = $userFound[0]['telefono'];
-            $data['password'] = $userFound[0]['clave'];
-            $data['company'] = $userFound[0]['empresa'];
-            $data['status'] = $userFound[0]['status_usuario'];
-            $data['role'] = $userFound[0]['rol_usuario'];
-
-        }else{
-            $data['success'] = false;
-            $data['error'] = $userFound;
-        }
-
-        echo json_encode($data);
-
-        break;
+        break;*/
 
     default:
 

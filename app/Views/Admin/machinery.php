@@ -31,7 +31,7 @@
         include '../Components/Admin/navbar.php';
     ?>
 
-    <div class="card shadow" style="margin-left: 40px; margin-right: 40px; margin-top:40px;">
+    <div class="card shadow mb-5" style="margin-left: 40px; margin-right: 40px; margin-top:40px;">
 
         <div id="divNameCompany" class="ms-3 mt-4">
             <!-- Nombre de la empresa -->
@@ -46,7 +46,7 @@
         </div>
 
         <div>
-            <input class="border rounded-1" type="text" style="width: 400px; margin-top:5px;" placeholder="Ingresa el nombre de la maquina a buscar">
+            <input id="inputNameMachinery" class="border rounded-1" onkeyup="findMachinery()" type="text" style="width: 400px; margin-top:5px;" placeholder="Ingresa el nombre de la maquina a buscar">
         </div>
 
         <div>
@@ -58,6 +58,15 @@
         </div>
 
         <br>
+
+        <div id="divPrincipalTable" class="ms-3 me-3">
+            <div id="divRowTable" class="row">
+                <!--Tabla de maquinaria-->
+            </div>
+
+            <br>
+
+        </div>
       
     </div>
     
