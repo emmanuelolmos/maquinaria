@@ -47,7 +47,7 @@
     </div>
 
     <!-- Scripts --> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="../../assets/js/jquery/jquery.min.js"></script>
     <script src="../../assets/js/more/login.js"></script>
 </body>
 </html>
