@@ -21,7 +21,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maquinarias</title>
-    <link rel="stylesheet" href="../../../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../../../assets/css/bootstrap/bootstrap.css">
     <script src="../../../assets/js/sweetalert/sweetalert2@11.js"></script>
     <link rel="stylesheet" href="../../../assets/css/bootstrap_icons/font/bootstrap-icons.css">
 </head>
