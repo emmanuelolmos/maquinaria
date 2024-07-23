@@ -64,7 +64,7 @@
                 <!--Tabla de maquinaria-->
             </div>
 
-            <br>
+            <br id="brCards">
 
         </div>
       

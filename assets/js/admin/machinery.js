@@ -164,6 +164,8 @@ function findMachinery(){
 
             $("#error").remove();
 
+            $("#brCards").remove();
+
             $("#divPrincipalTable").append(
                 '<div id="divRowTable" class="row"></div>'
             );
@@ -218,11 +220,15 @@ function findMachinery(){
                 }
 
                 $("#divRowTable").append(cards);
+                $("#divPrincipalTable").append('<br id="brCards">');
                 
             }else{
 
                 $("#divRowTable").remove();
+                
                 $("#error").remove();
+
+                $("#brCards").remove();
 
                 $("#divPrincipalTable").append(
                     '<div id="divRowTable" class="row"></div>'
