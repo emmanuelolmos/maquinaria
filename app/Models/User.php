@@ -13,11 +13,13 @@ class User{
 
     function authenticate($phone, $password){
         
-        $query = "SELECT * FROM usuarios LEFT JOIN empresa ON empresa.ID_empresa WHERE 
-        usuarios.telefono = :telefono AND usuarios.status_usuario = 1";
+        /*$query = "SELECT * FROM usuarios LEFT JOIN empresa ON empresa.ID_empresa WHERE 
+        usuarios.telefono = :telefono AND usuarios.status_usuario = 1";*/
+
+        $query = "SELECT * FROM usuarios WHERE telefono = :phone AND status_usuario = 1";
 
         $statement = $this->connection->prepare($query);
-        $statement->bindParam(':telefono', $phone);
+        $statement->bindParam(':phone', $phone);
 
         //Manejo de errores
 
@@ -36,9 +38,8 @@ class User{
                     $_SESSION['ID_usuario'] = $user['ID_usuario'];
                     $_SESSION['nombre'] =  $user['nombre_usuario'];
                     $_SESSION['telefono'] =  $user['telefono'];
+                    $_SESSION['empresa'] = $user['empresa'];
                     $_SESSION['tipo'] =  $user['rol_usuario'];
-                    $_SESSION['empresa'] =  $user['nombre_empresa'];
-                    $_SESSION['ID_empresa'] =  $user['ID_empresa'];
                     
                     return '';
 
