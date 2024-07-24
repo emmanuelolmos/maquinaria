@@ -50,14 +50,12 @@
         </div>
 
         <div>
-            <button class="btn btn-secondary" onclick="loadCompanies()" data-bs-toggle="modal" data-bs-target="#addUserModal" style="margin-right: 30px;">
+        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addMachineryModal" style="margin-right: 30px;">
                 <i class="bi bi-plus-circle"></i></i> Agregar
             </button>
         </div>
     
         </div>
-
-        <br>
 
         <div id="divPrincipalTable" class="ms-3 me-3">
             <div id="divRowTable" class="row">
@@ -72,7 +70,7 @@
     
     <!-- Modales -->
     <?php
-        //Pendientes
+        include 'Modals/addMachinery.php';
     ?>
 
     <!-- Scripts -->

@@ -16,9 +16,14 @@ function loadData(){
             if(convertedInfo['success']){
 
                 $("#hNameCompany").remove();
+                $("#itemCompanyAddMachineryModal").remove();
 
                 $("#divNameCompany").append(
                     '<h1 id="hNameCompany" class="fs-3 ">Empresa: ' + convertedInfo['company'].nombre_empresa + '</h1>'
+                );
+
+                $("#selectCompanyAddMachineryModal").append(
+                    '<option id="itemCompanyAddMachineryModal" value="' + convertedInfo['company'].ID_empresa + '" selected>' + convertedInfo['company'].nombre_empresa + '</option>'
                 );
                 
             }else{
@@ -73,7 +78,7 @@ function loadMachinery(){
 
                 //Se llena con el siguiente ciclo
                 for(let i=0; i < convertedInfo['machinery'].length; i++){
-                    cards += '<div class="col-md-4 mb-3 mb-sm-0">' +
+                    cards += '<div class="col-md-4 mt-3 mb-3 mb-sm-0">' +
                                 '<div class="card">' +
                                     '<img class="card-img-top" src="http://tallergeorgio.hopto.org:5613/tallergeorgio/imagenes/maquinas/' + convertedInfo['machinery'][i].foto_maquina + '" alt="">' +
                                     '<div class="card-body">' +
@@ -179,7 +184,7 @@ function findMachinery(){
 
                 //Se llena con el siguiente ciclo
                 for(let i=0; i < convertedInfo['machinery'].length; i++){
-                    cards += '<div class="col-md-4 mb-3 mb-sm-0">' +
+                    cards += '<div class="col-md-4 mt-3 mb-3 mb-sm-0">' +
                                 '<div class="card">' +
                                     '<img class="card-img-top" src="http://tallergeorgio.hopto.org:5613/tallergeorgio/imagenes/maquinas/' + convertedInfo['machinery'][i].foto_maquina + '" alt="">' +
                                     '<div class="card-body">' +
@@ -259,6 +264,49 @@ function findMachinery(){
         } 
     }); 
 }
+
+//Formularios de los modales
+
+//Nueva maquina
+$(document).ready(function () { 
+    $('#formAddMachineryModal').submit(function (e) { 
+        e.preventDefault(); 
+
+        //Para el caso que el usuario haya enviado el form con datos erróneos
+        $("#errorMessageContentAddMachineryModal").remove();
+
+        var formElement = document.getElementById("formAddMachineryModal");
+        formData = new FormData(formElement);
+        formData.append("function", 'insertMachinery');
+
+        $.ajax({
+            url: '../../Controllers/Admin/MachineryController.php', 
+            type: 'POST', 
+            data: formData, 
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data){
+
+                var convertedInfo = JSON.parse(data);
+
+                if(convertedInfo['success']){
+
+                    location.reload();
+                    
+                }else{
+                    $("#errorMessageAddMachineryModal").append(
+                        '<h1 id="errorMessageContentAddMachineryModal" class="text-danger fw-bold fs-6 mb-3">' + convertedInfo['error'] + '</h1>'
+                    );
+                }
+
+            }, 
+            error: function (jqXHR, textStatus, errorThrown) { 
+                alert('Error'); 
+            } 
+        });
+    }); 
+}); 
 
 
 

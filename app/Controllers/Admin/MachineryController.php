@@ -97,6 +97,75 @@ switch($function){
 
         break;
 
+    case 'insertMachinery':
+
+        //Se guardan los datos enviados
+
+        $name = isset($_POST['inputNameAddMachineryModal']) ? $_POST['inputNameAddMachineryModal'] : '';
+        $mark = isset($_POST['inputMarkAddMachineryModal']) ? $_POST['inputMarkAddMachineryModal'] : '';
+        $model = isset($_POST['inputModelAddMachineryModal']) ? $_POST['inputModelAddMachineryModal'] : '';
+        $serie = isset($_POST['inputSerieAddMachineryModal']) ? $_POST['inputSerieAddMachineryModal'] : '';
+        $description = isset($_POST['inputDescriptionAddMachineryModal']) ? $_POST['inputDescriptionAddMachineryModal'] : '';
+        $date = isset($_POST['inputDateAddMachineryModal']) ? $_POST['inputDateAddMachineryModal'] : '';
+        $status = isset($_POST['selectStatusAddMachineryModal']) ? $_POST['selectStatusAddMachineryModal'] : '';
+        $company = isset($_POST['selectCompanyAddMachineryModal']) ? $_POST['selectCompanyAddMachineryModal'] : '';
+        $image = isset($_FILES['inputImageAddMachineryModal']) ? $_FILES['inputImageAddMachineryModal'] : '';
+
+        //Se comprueba que los datos se hayan ingresado correctamente
+        if(empty($name) || empty($mark) || empty($model) || empty($serie) || empty($description) || empty($date) || empty($status) || empty($company) || empty($image)){
+
+            $error = 'Es necesario ingresar los datos completos';
+
+        }else{
+
+            //Se comprueba que no haya una maquina con el mismo nombre
+            $machinery = new Machinery();
+
+            $result = $machinery->findMachineryToStore($name);
+
+            if($result == 'Empty'){
+
+                //Todos los datos son correctos
+
+                //Se guarda la imagen con la API
+                $option = 13;
+                $nameImage = $machinery->sendImageWithApi($image, $option);
+                
+                //Se guarda el registro
+                $result = $machinery->storeMachinery($name, $mark, $model, $serie, $description, $date, $status, $company, $nameImage);
+
+                if($result == ''){
+
+                    $error = $result;
+                    
+                }else{
+                    $error = 'Error en la inserción del registro';
+                }
+
+            }else{
+                 
+                $error = 'Ya hay una maquina con el mismo nombre';
+
+                if($result == 'Error'){
+
+                    $error = 'Error en la consulta de maquinaria';
+                   
+                }
+            }
+        }
+
+        //Si hay un error se manda por la variable data
+        if(empty($error)){
+            $data['success'] = true;
+        }else{
+            $data['success'] = false;
+            $data['error'] = $error;
+        }
+
+        echo json_encode($data);
+
+        break;
+
     /*
     case 'getCompanies':
 
