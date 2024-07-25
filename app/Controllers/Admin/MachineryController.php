@@ -112,7 +112,7 @@ switch($function){
         $image = isset($_FILES['inputImageAddMachineryModal']) ? $_FILES['inputImageAddMachineryModal'] : '';
 
         //Se comprueba que los datos se hayan ingresado correctamente
-        if(empty($name) || empty($mark) || empty($model) || empty($serie) || empty($description) || empty($date) || empty($status) || empty($company) || empty($image)){
+        if(empty($name) || empty($mark) || empty($model) || empty($serie) || empty($description) || empty($date) || empty($status) || empty($company) || empty($image['tmp_name'])){
 
             $error = 'Es necesario ingresar los datos completos';
 
@@ -153,6 +153,93 @@ switch($function){
                 }
             }
         }
+
+        //Si hay un error se manda por la variable data
+        if(empty($error)){
+            $data['success'] = true;
+        }else{
+            $data['success'] = false;
+            $data['error'] = $error;
+        }
+
+        echo json_encode($data);
+
+        break;
+
+    case 'getDataMachinery':
+
+        $id = $_POST['id'];
+
+        $machinery = new Machinery;
+
+        $result = $machinery->getMachineryItem($id);
+
+        if($result == 'Error' || $result == 'Empty'){
+            $error = $result;
+        }else{
+            $error = '';
+        }
+
+        //Si hay un error se manda por la variable data
+        if(empty($error)){
+            $data['success'] = true;
+            $data['machinery'] = $result;
+        }else{
+            $data['success'] = false;
+            $data['error'] = $error;
+        }
+
+        echo json_encode($data);
+
+        break;
+
+    case 'updateMachinery':
+
+        //Se guardan los datos enviados
+
+        $id = isset($_POST['inputIdEditMachineryModal']) ? $_POST['inputIdEditMachineryModal'] : '';
+        $name = isset($_POST['inputNameEditMachineryModal']) ? $_POST['inputNameEditMachineryModal'] : '';
+        $mark = isset($_POST['inputMarkEditMachineryModal']) ? $_POST['inputMarkEditMachineryModal'] : '';
+        $model = isset($_POST['inputModelEditMachineryModal']) ? $_POST['inputModelEditMachineryModal'] : '';
+        $serie = isset($_POST['inputSerieEditMachineryModal']) ? $_POST['inputSerieEditMachineryModal'] : '';
+        $description = isset($_POST['inputDescriptionEditMachineryModal']) ? $_POST['inputDescriptionEditMachineryModal'] : '';
+        $date = isset($_POST['inputDateEditMachineryModal']) ? $_POST['inputDateEditMachineryModal'] : '';
+        $status = isset($_POST['selectStatusEditMachineryModal']) ? $_POST['selectStatusEditMachineryModal'] : '';
+        $company = isset($_POST['selectCompanyEditMachineryModal']) ? $_POST['selectCompanyEditMachineryModal'] : '';
+        $image = isset($_FILES['inputImageEditMachineryModal']) ? $_FILES['inputImageEditMachineryModal'] : '';
+
+        //Se comprueba que los datos se hayan ingresado correctamente
+        if(empty($name) || empty($mark) || empty($model) || empty($serie) || empty($description) || empty($date) || empty($status) || empty($company)){
+
+            $error = 'Es necesario ingresar los datos completos';
+
+        }else{
+
+            //Los datos se agregaron correctamente 
+
+            //Se comprueba que haya imagen
+            if(empty($image['tmp_name'])){
+
+                $nameImage = '';
+
+            }else{
+
+                //Se guarda la imagen con la API
+                $machinery = new Machinery();
+                $option = 13;
+                $nameImage = $machinery->sendImageWithApi($image, $option);
+
+            }
+
+            //Se manda al modelo
+            $machinery = new Machinery();
+            $error = $machinery->updateMachinery($id, $name, $mark, $model, $serie, $description, $date, $status, $company, $nameImage);
+
+        }
+
+
+        //$result = $image['tmp_name'];
+        //$error = '';
 
         //Si hay un error se manda por la variable data
         if(empty($error)){

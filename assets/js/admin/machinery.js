@@ -25,6 +25,10 @@ function loadData(){
                 $("#selectCompanyAddMachineryModal").append(
                     '<option id="itemCompanyAddMachineryModal" value="' + convertedInfo['company'].ID_empresa + '" selected>' + convertedInfo['company'].nombre_empresa + '</option>'
                 );
+
+                $("#selectCompanyEditMachineryModal").append(
+                    '<option id="itemCompanyEditMachineryModal" value="' + convertedInfo['company'].ID_empresa + '" selected>' + convertedInfo['company'].nombre_empresa + '</option>'
+                );
                 
             }else{
 
@@ -86,12 +90,12 @@ function loadMachinery(){
                                         '<div class="d-flex justify-content-between mb-2">' +
                                             '<h5 class="card-title fs-6 mt-2">' + convertedInfo['machinery'][i].nombre_maquina.toUpperCase() + '</h5>' +
                                             '<button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-list"></i></button>' +
-                                            '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">' +
-                                                '<li class="dropdown-item">Editar maquina</li>' +
+                                            '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">' +
+                                                '<li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editMachineryModal" onclick="loadDataMachinery(' + convertedInfo['machinery'][i].ID_maquina + ')">Editar maquina</li>' +
                                                 '<li class="dropdown-item">Asignar mantenimiento</li>' +
                                                 '<li class="dropdown-item">Crear checks</li>' +
                                                 '<li class="dropdown-item">Generar revisiones</li>' +
-                                                '<li class="dropdown-item">Eliminar maquinas</li>' +
+                                                '<li class="dropdown-item" onclick="deleteMachinery(' + convertedInfo['machinery'][i].ID_maquina + ')">Eliminar maquinas</li>' +
                                             '</ul>' +
                                         '</div>' +
                                         //Descripción
@@ -265,6 +269,92 @@ function findMachinery(){
     }); 
 }
 
+function loadDataMachinery(id){
+
+    var petition = {
+        id: id,
+        function: 'getDataMachinery'
+    };
+
+    $.ajax({ 
+        url: '../../Controllers/Admin/MachineryController.php', 
+        type: 'POST', 
+        data: petition, 
+        success: function (data){
+
+            var convertedInfo = JSON.parse(data);
+
+            if(convertedInfo['success']){
+
+                //Se borran los datos en caso de ya haber sido solicitados
+                $("#inputIdEditMachineryModal").remove();
+                $("#inputNameEditMachineryModal").remove();
+                $("#inputMarkEditMachineryModal").remove();
+                $("#inputModelEditMachineryModal").remove();
+                $("#inputSerieEditMachineryModal").remove();
+                $("#inputDescriptionEditMachineryModal").remove();
+                $("#inputDateEditMachineryModal").remove();
+                $("#imageEditMachineryModal").remove();
+
+                //Para el caso que el usuario haya enviado el form con datos erróneos
+                 $("#errorMessageContentEditMachineryModal").remove();
+
+                //Se borra la alerta de error en el caso de que se hayan ingresado los datos incorrectos
+                $('#errorMessageContentEditUser').remove();
+
+                //Se imprime la información
+
+                $("#divIdEditMachineryModal").append(
+                    '<input id="inputIdEditMachineryModal" name="inputIdEditMachineryModal" type="hidden" value="' + id + '">'
+                );
+
+                $("#divNameEditMachineryModal").append(
+                    '<input id="inputNameEditMachineryModal" name="inputNameEditMachineryModal" type="text" placeholder="Ingresa el nombre" style="margin-left: 8px; width: 250px;" value="' + convertedInfo['machinery'].nombre_maquina + '">'
+                );
+
+                $("#divMarkEditMachineryModal").append(
+                    '<input id="inputMarkEditMachineryModal" name="inputMarkEditMachineryModal" type="text" placeholder="Ingresa la marca" style="margin-left: 8px; width: 250px;" value="' + convertedInfo['machinery'].marca + '">'
+                );
+
+                $("#divModelEditMachineryModal").append(
+                    '<input id="inputModelEditMachineryModal" name="inputModelEditMachineryModal" type="text" placeholder="Ingresa el modelo" style="margin-left: 8px; width: 250px;" value="' + convertedInfo['machinery'].modelo + '">'
+                );
+
+                $("#divSerieEditMachineryModal").append(
+                    '<input id="inputSerieEditMachineryModal" name="inputSerieEditMachineryModal" type="text" placeholder="Ingresa el número de serie" style="margin-left: 8px; width: 250px;" value="' + convertedInfo['machinery'].nserie + '">'
+                );
+
+                $("#divDescriptionEditMachineryModal").append(
+                    '<textarea id="inputDescriptionEditMachineryModal" name="inputDescriptionEditMachineryModal" style="margin-left: 8px; width:250px" placeholder="Ingresa las observaciones">' + convertedInfo['machinery'].observaciones + '</textarea>'
+                );
+
+                $("#divDateEditMachineryModal").append(
+                    '<input id="inputDateEditMachineryModal" name="inputDateEditMachineryModal" type="date" required pattern="\d{4}-\d{2}-\d{2}" style="margin-left: 8px; width: 250px;" value="' + convertedInfo['machinery'].fecha_compra + '">'
+                );
+
+                $("#divImageEditMachineryModal").append(
+                    '<img id="imageEditMachineryModal" class="mx-auto" src="http://tallergeorgio.hopto.org:5613/tallergeorgio/imagenes/maquinas/' + convertedInfo['machinery'].foto_maquina + '" style="width: 350px; height:auto;" alt="">'
+                );
+                
+            }else{
+
+                alert(convertedInfo['error']);
+
+            }
+
+        }, 
+        error: function (jqXHR, textStatus, errorThrown) { 
+            alert('Error'); 
+        } 
+    }); 
+
+}
+
+function deleteMachinery($id){
+    alert(id);
+}
+
+
 //Formularios de los modales
 
 //Nueva maquina
@@ -297,6 +387,47 @@ $(document).ready(function () {
                 }else{
                     $("#errorMessageAddMachineryModal").append(
                         '<h1 id="errorMessageContentAddMachineryModal" class="text-danger fw-bold fs-6 mb-3">' + convertedInfo['error'] + '</h1>'
+                    );
+                }
+
+            }, 
+            error: function (jqXHR, textStatus, errorThrown) { 
+                alert('Error'); 
+            } 
+        });
+    }); 
+}); 
+
+//Editar maquina
+$(document).ready(function () { 
+    $('#formEditMachineryModal').submit(function (e) { 
+        e.preventDefault(); 
+
+        //Para el caso que el usuario haya enviado el form con datos erróneos
+        $("#errorMessageContentEditMachineryModal").remove();
+
+        var formElement = document.getElementById("formEditMachineryModal");
+        formData = new FormData(formElement);
+        formData.append("function", 'updateMachinery');
+
+        $.ajax({
+            url: '../../Controllers/Admin/MachineryController.php', 
+            type: 'POST', 
+            data: formData, 
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data){
+
+                var convertedInfo = JSON.parse(data);
+
+                if(convertedInfo['success']){
+
+                    location.reload();
+                    
+                }else{
+                    $("#errorMessageEditMachineryModal").append(
+                        '<h1 id="errorMessageContentEditMachineryModal" class="text-danger fw-bold fs-6 mb-3">' + convertedInfo['error'] + '</h1>'
                     );
                 }
 

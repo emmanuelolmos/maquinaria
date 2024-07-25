@@ -50,7 +50,7 @@
         </div>
 
         <div>
-        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addMachineryModal" style="margin-right: 30px;">
+            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addMachineryModal" style="margin-right: 30px;">
                 <i class="bi bi-plus-circle"></i></i> Agregar
             </button>
         </div>
@@ -71,6 +71,7 @@
     <!-- Modales -->
     <?php
         include 'Modals/addMachinery.php';
+        include 'Modals/editMachinery.php';
     ?>
 
     <!-- Scripts -->

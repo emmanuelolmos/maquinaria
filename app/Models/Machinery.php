@@ -164,6 +164,103 @@ class Machinery{
 
     }
 
+    function getMachineryItem($id){
+        
+        $query = 'SELECT * FROM maquinas WHERE ID_maquina = :id';
+
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':id', $id);
+
+        if($statement->execute()){
+
+            $machinery = $statement->fetch(PDO::FETCH_ASSOC);
+
+            if(isset($machinery['nombre_maquina'])){
+                return $machinery;
+            }else{
+                return 'Empty';
+            }
+
+        }else{
+            return 'Error';
+        }
+
+    }
+
+    function updateMachinery($id, $name, $mark, $model, $serie, $description, $date, $status, $company, $image){
+
+        //Se comprueba que no haya otro registro con el mismo nombre
+        $query = 'SELECT * FROM maquinas WHERE nombre_maquina = :nameMachinery AND ID_maquina != :id';
+
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':nameMachinery', $name);
+        $statement->bindParam(':id', $id);
+
+        if($statement->execute()){
+
+            $machinery = $statement->fetchAll();
+
+            if(!isset($machinery[0]['nombre_maquina'])){
+
+                //Se comprueba que haya una imagen nueva
+                if(empty($image)){
+
+                    //Actualización sin imagen
+                    $query = 'UPDATE maquinas SET nombre_maquina = :nameMachinery, marca = :mark, modelo = :model, nserie = :serie, observaciones = :descriptionMachinery, fecha_compra = :dateMachinery, status_maquina = :statusMachinery, empresa = :company WHERE ID_maquina = :id';
+
+                    $statement = $this->connection->prepare($query);
+                    $statement->bindParam(':id', $id);
+                    $statement->bindParam(':nameMachinery', $name);
+                    $statement->bindParam(':mark', $mark);
+                    $statement->bindParam(':model', $model);
+                    $statement->bindParam(':serie', $serie);
+                    $statement->bindParam(':descriptionMachinery', $description);
+                    $statement->bindParam(':dateMachinery', $date);
+                    $statement->bindParam(':statusMachinery', $status);
+                    $statement->bindParam(':company', $company);
+
+                    if($statement->execute()){
+
+                        return '';
+    
+                    }else{
+                        return 'Error en la actualización';
+                    }
+
+                }else{
+
+                    //Actualización con imagen
+                    $query = 'UPDATE maquinas SET nombre_maquina = :nameMachinery, marca = :mark, modelo = :model, nserie = :serie, observaciones = :descriptionMachinery, fecha_compra = :dateMachinery, status_maquina = :statusMachinery, empresa = :company, foto_maquina = :imageMachinery WHERE ID_maquina = :id';
+
+                    $statement = $this->connection->prepare($query);
+                    $statement->bindParam(':id', $id);
+                    $statement->bindParam(':nameMachinery', $name);
+                    $statement->bindParam(':mark', $mark);
+                    $statement->bindParam(':model', $model);
+                    $statement->bindParam(':serie', $serie);
+                    $statement->bindParam(':descriptionMachinery', $description);
+                    $statement->bindParam(':dateMachinery', $date);
+                    $statement->bindParam(':statusMachinery', $status);
+                    $statement->bindParam(':company', $company);
+                    $statement->bindParam(':imageMachinery', $image);
+
+                    if($statement->execute()){
+
+                        return '';
+    
+                    }else{
+                        return 'Error en la actualización';
+                    }
+                }
+
+            }else{
+                return 'Ya se encuentra una maquina con el mismo nombre';
+            }
+        }else{
+            return 'Error';
+        }
+    }
+
 }
 
 ?>
