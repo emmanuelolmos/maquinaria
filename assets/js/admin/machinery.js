@@ -196,12 +196,12 @@ function findMachinery(){
                                         '<div class="d-flex justify-content-between mb-2">' +
                                             '<h5 class="card-title fs-6 mt-2">' + convertedInfo['machinery'][i].nombre_maquina.toUpperCase() + '</h5>' +
                                             '<button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-list"></i></button>' +
-                                            '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">' +
-                                                '<li class="dropdown-item">Editar maquina</li>' +
+                                            '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">' +
+                                                '<li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editMachineryModal" onclick="loadDataMachinery(' + convertedInfo['machinery'][i].ID_maquina + ')">Editar maquina</li>' +
                                                 '<li class="dropdown-item">Asignar mantenimiento</li>' +
                                                 '<li class="dropdown-item">Crear checks</li>' +
                                                 '<li class="dropdown-item">Generar revisiones</li>' +
-                                                '<li class="dropdown-item">Eliminar maquinas</li>' +
+                                                '<li class="dropdown-item" onclick="deleteMachinery(' + convertedInfo['machinery'][i].ID_maquina + ')">Eliminar maquinas</li>' +
                                             '</ul>' +
                                         '</div>' +
                                         //Descripción
@@ -350,8 +350,79 @@ function loadDataMachinery(id){
 
 }
 
-function deleteMachinery($id){
-    alert(id);
+function deleteMachinery(id){
+    
+    //Alerta de SweetAlert
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: true
+      });
+      swalWithBootstrapButtons.fire({
+        title: "Estás seguro de eliminar el registro de maquina?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+            //Se confirmó la eliminación
+            var petition = {
+                function: 'deleteMachinery',
+                id: id
+            };
+            
+            $.ajax({ 
+                url: '../../Controllers/Admin/MachineryController.php', 
+                type: 'POST', 
+                data: petition, 
+                success: function (data){
+        
+                    var convertedInfo = JSON.parse(data);
+        
+                    if(convertedInfo['success']){
+                        
+                        swalWithBootstrapButtons.fire({
+                            title: "Eliminada",
+                            text: "La maquina se ha eliminado.",
+                            icon: "success"
+                        });
+
+                        location.reload();
+                        
+                    }else{
+
+                        switch(convertedInfo['error']){
+                            case 'unknown':
+                                swalWithBootstrapButtons.fire({
+                                    title: "Error",
+                                    text: "El registro de la maquina no se eliminó correctamente.",
+                                    icon: "error"
+                                });
+                                break;
+                        }
+        
+                    }
+        
+                }, 
+                error: function (jqXHR, textStatus, errorThrown) { 
+                    alert('Error'); 
+                } 
+            });
+        } else if (
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelado",
+            text: "No se borró el registro de la maquina",
+            icon: "error"
+          });
+        }
+      });
 }
 
 

@@ -261,6 +261,19 @@ class Machinery{
         }
     }
 
+    function deleteMachinery($id){
+
+        $query = 'DELETE FROM maquinas WHERE ID_maquina = :id';
+
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':id', $id);
+
+        if($statement->execute()){
+            return '';
+        }else{
+            return 'Error';
+        }
+    }
 }
 
 ?>

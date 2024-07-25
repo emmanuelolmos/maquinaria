@@ -253,6 +253,27 @@ switch($function){
 
         break;
 
+    case 'deleteMachinery':
+
+        $id = $_POST['id'];
+
+        //Se manda el id al modelo
+        $machinery = new Machinery();
+
+        $error = $machinery->deleteMachinery($id);
+
+        //Si hay un error se manda por la variable data
+        if(empty($error)){
+            $data['success'] = true;
+        }else{
+            $data['success'] = false;
+            $data['error'] = $error;
+        }
+
+        echo json_encode($data);
+
+        break;
+
     /*
     case 'getCompanies':
 
